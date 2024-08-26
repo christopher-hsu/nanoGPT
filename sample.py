@@ -81,3 +81,20 @@ if start.startswith('FILE:'):
         start = f.read()
 start_ids = encode(start)
 x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
+
+
+# perplexity = evaluate.load("perplexity", module_type="metric")
+# run generation
+with torch.no_grad():
+    with ctx:
+        for k in range(num_samples):
+            y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
+            decoded = decode(y[0].tolist())
+            print(decoded)
+            print('---------------')
+
+            # input_texts = [s for s in decoded if s!='']
+            # results = perplexity.compute(model_id='gpt2',
+                            #  predictions=input_texts)
+            # print(round(results["mean_perplexity"], 2))
+            # print(round(results["perplexities"][0], 2))
